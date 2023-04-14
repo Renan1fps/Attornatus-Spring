@@ -36,6 +36,9 @@ class GetUserByIdTest {
     @Test
     @DisplayName("Should throw error when user is not provided")
     void whenUserIsNotProvided() {
+        BDDMockito.when(userRepository.findById(ArgumentMatchers.any(UUID.class)))
+                .thenReturn(Optional.empty());
+
         Assertions.assertThatExceptionOfType(BadRequestException.class)
                 .isThrownBy(() ->
                         getUserById.execute(UserMock.id.toString())
