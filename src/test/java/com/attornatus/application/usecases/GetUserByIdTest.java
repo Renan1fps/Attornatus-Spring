@@ -15,43 +15,42 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(SpringExtension.class)
-class CreateUserUseCaseTest {
+class GetUserByIdTest {
 
     @InjectMocks
-    private CreateUserUseCase createUserUseCase;
+    private GetUserById getUserById;
 
     @Mock
     private UserRepository userRepository;
 
     @BeforeEach
     void setUp() {
-        BDDMockito.when(userRepository.findByName(ArgumentMatchers.anyString()))
+        BDDMockito.when(userRepository.findById(ArgumentMatchers.any(UUID.class)))
                 .thenReturn(Optional.of(UserMock.createdValidUser()));
-        BDDMockito.when(userRepository.save(ArgumentMatchers.any(User.class)))
-                .thenReturn(UserMock.createdValidUser());
     }
 
     @Test
-    @DisplayName("Should throw error when user already exists")
-    void whenUserAlreadyExists() {
+    @DisplayName("Should throw error when user is not provided")
+    void whenUserIsNotProvided() {
         Assertions.assertThatExceptionOfType(BadRequestException.class)
                 .isThrownBy(() ->
-                        createUserUseCase.execute(UserMock.createValidUser())
+                        getUserById.execute(UserMock.id.toString())
                 );
     }
 
     @Test
-    @DisplayName("Should return valid user saved")
-    void whenSaveWithSuccess() {
-        BDDMockito.when(userRepository.findByName(ArgumentMatchers.anyString()))
-                .thenReturn(Optional.empty());
-
-        User user = createUserUseCase.execute(UserMock.createValidUser());
+    @DisplayName("Should return user when is provided")
+    void whenUserIsProvided() {
+        User user = getUserById.execute(UserMock.id.toString());
         Assertions.assertThat(user.getId()).isNotNull();
+        Assertions.assertThat(user.getId()).isEqualTo(UserMock.id);
         Assertions.assertThat(user).isNotNull().isEqualTo(UserMock.createdValidUser());
     }
+
 }
