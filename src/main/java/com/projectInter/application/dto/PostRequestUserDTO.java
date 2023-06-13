@@ -13,4 +13,6 @@ public class PostRequestUserDTO {
 
     private String name;
     private String birthday;
+    private String password;
+    private String passwordConfirmation;
 }

@@ -1,6 +1,7 @@
 package com.projectInter.controller;
 
 import com.projectInter.application.dto.PostRequestUserDTO;
+import com.projectInter.application.exception.BadRequestException;
 import com.projectInter.application.mapper.UserMapper;
 import com.projectInter.application.usecases.CreateUserUseCase;
 import com.projectInter.application.usecases.GetUserByIdUseCase;
@@ -13,6 +14,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Objects;
 
 @RestController
 @RequestMapping("users")
@@ -33,6 +36,9 @@ public class UserController {
 
     @PostMapping()
     public ResponseEntity<User> create(@RequestBody PostRequestUserDTO user) {
+        if(!Objects.equals(user.getPassword(), user.getPasswordConfirmation())){
+            throw  new BadRequestException("Password not equals");
+        }
         User userSave = this.createUserUseCase.execute(UserMapper.toUser(user));
         return new ResponseEntity<>(userSave, HttpStatus.CREATED);
     }

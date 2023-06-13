@@ -30,6 +30,8 @@ public class User {
     private String name;
     @Column
     private String birthday;
+    @Column
+    private String password;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Address> addresses = new ArrayList<>();

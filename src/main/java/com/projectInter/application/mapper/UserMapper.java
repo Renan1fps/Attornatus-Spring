@@ -14,6 +14,7 @@ public class UserMapper {
         return User.builder()
                 .name(user.getName())
                 .birthday(user.getBirthday())
+                .password(user.getPassword())
                 .build();
     }
 

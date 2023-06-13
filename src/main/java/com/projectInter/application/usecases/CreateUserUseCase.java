@@ -1,6 +1,7 @@
 package com.projectInter.application.usecases;
 
 import com.projectInter.application.exception.BadRequestException;
+import com.projectInter.application.protocols.Encrypt;
 import com.projectInter.domain.entities.User;
 import com.projectInter.domain.repositories.UserRepository;
 import org.springframework.stereotype.Service;
@@ -12,9 +13,11 @@ import java.util.UUID;
 public class CreateUserUseCase {
 
     private final UserRepository userRepository;
+    private final Encrypt crypto;
 
-    public CreateUserUseCase(UserRepository userRepository){
+    public CreateUserUseCase(UserRepository userRepository, Encrypt crypto){
         this.userRepository = userRepository;
+        this.crypto = crypto;
     }
 
     public User execute(User userToSave) {
@@ -26,6 +29,7 @@ public class CreateUserUseCase {
         }
 
         userToSave.setId(UUID.randomUUID());
+        userToSave.setPassword(this.crypto.crypto(userToSave.getPassword()));
 
         return this.userRepository.save(userToSave);
     }

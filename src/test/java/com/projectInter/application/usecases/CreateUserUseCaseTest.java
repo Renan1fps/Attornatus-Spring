@@ -1,6 +1,7 @@
 package com.projectInter.application.usecases;
 
 import com.projectInter.application.exception.BadRequestException;
+import com.projectInter.application.protocols.Encrypt;
 import com.projectInter.domain.entities.User;
 import com.projectInter.domain.repositories.UserRepository;
 import com.projectInter.mocks.UserMock;
@@ -25,6 +26,9 @@ class CreateUserUseCaseTest {
 
     @Mock
     private UserRepository userRepository;
+
+    @Mock
+    private Encrypt crypto;
 
     @BeforeEach
     void setUp() {
